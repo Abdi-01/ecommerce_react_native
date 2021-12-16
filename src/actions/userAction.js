@@ -19,3 +19,23 @@ export const onLogin = (username, password) => {
         }
     }
 }
+
+export const onRegis = (username, email, password) => {
+    return async (dispatch) => {
+        try {
+            let res = await axios.post(`${API_URL}/users`, {
+                username,
+                email,
+                password,
+                role: "user",
+                status: "Active",
+                cart: []
+            });
+            // if (res.data.length > 0) {
+                return { success: true }
+            // }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}

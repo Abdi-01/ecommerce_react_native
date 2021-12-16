@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { View, StatusBar, KeyboardAvoidingView, Alert } from 'react-native';
+import { View, StatusBar, KeyboardAvoidingView, Alert, Easing } from 'react-native';
 import { Button, Icon, Image, Input, SocialIcon, Text } from 'react-native-elements';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen'
 import { API_URL } from '../helper';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { onLogin } from '../actions'
 import { StackActions } from '@react-navigation/native';
 
@@ -12,6 +12,13 @@ const LoginPage = (props) => {
     // useDispatch : digunakan untuk menjalankan fungsi dari actions, pengganti connect pada class component
     const dispatch = useDispatch();
 
+    // useSelctor : pengganti mapToProps pada class component
+    const { iduser,email } = useSelector((state) => {
+        return {
+            iduser: state.userReducer.id,
+            email: state.userReducer.email
+        }
+    })
 
 
     const [username, setUsername] = useState("");
@@ -29,7 +36,7 @@ const LoginPage = (props) => {
         // let res = await axios.get(`${API_URL}/users?username=${username}&password=${password}`)
 
         if (respon.success > 0) {
-            props.navigation.dispatch(StackActions.replace("TabNav"))
+            // props.navigation.dispatch(StackActions.replace("TabNav"))
         } else {
             Alert.alert("Attention ⚠️", "This account is not exist")
         }

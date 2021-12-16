@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { View, StatusBar, KeyboardAvoidingView } from 'react-native';
+import { View, StatusBar, KeyboardAvoidingView, Alert } from 'react-native';
 import { Button, Icon, Image, Input, SocialIcon, Text } from 'react-native-elements';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen'
+import { useDispatch, useSelector } from 'react-redux';
 import { API_URL } from '../helper';
+import { onRegis } from '../actions';
+import { StackActions } from '@react-navigation/native';
 
 const RegisterPage = (props) => {
+    const dispatch = useDispatch();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -17,19 +21,17 @@ const RegisterPage = (props) => {
 
 
     const onBtRegis = async () => {
-        try {
-            let res = await axios.post(`${API_URL}/users`, {
-                username,
-                email,
-                password,
-                role:"user",
-                status: "Active",
-                cart: []
-            })
-
-            console.log(res.data)
-        } catch (error) {
-            console.log(error)
+        let respon = await dispatch(onRegis(username, email, password));
+        if (respon.success) {
+            Alert.alert("Success ✅", "Registration Successfully",
+                [
+                    {
+                        text: "To Login Page",
+                        onPress: () => props.navigation.dispatch(StackActions.replace("Login"))
+                    }
+                ])
+        } else {
+            Alert.alert("Attention ⚠️", "This account is not exist")
         }
     }
 
