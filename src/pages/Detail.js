@@ -1,16 +1,16 @@
 import React from 'react';
 import { StatusBar, View, FlatList, ScrollView } from 'react-native';
-import { Text, Icon, Image, Button } from 'react-native-elements';
+import { Text, Icon, Image, Button, Overlay, Input } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 const DetailProduct = (props) => {
 
     const { nama, kategori, deskripsi, harga, brand, images, stock } = props.route.params.detail
-
+    const [visible, setVisible] = React.useState(false);
     console.log(props.route.params)
-    const [activeType, setActiveType] = React.useState(0)
+    const [activeType, setActiveType] = React.useState({})
     const printType = () => {
         return stock.map((value, index) => {
-            if (activeType == index) {
+            if (activeType.type == value.type) {
                 return <Button
                     title={value.type}
                     type="clear"
@@ -23,11 +23,12 @@ const DetailProduct = (props) => {
                     titleStyle={{
                         color: "white"
                     }}
-
-                />
-            } else {
+                    onPress={() => setActiveType(value)}
+                    
+                    />
+                } else {
                 return <Button
-                    title={value.type}
+                title={value.type}
                     type="clear"
                     containerStyle={{
                         marginLeft: 5,
@@ -36,15 +37,20 @@ const DetailProduct = (props) => {
                         borderWidth: 1,
                         borderColor: "gray"
                     }}
-
-                />
+                    onPress={() => setActiveType(value)}
+                    
+                    />
             }
         })
     }
+
+    const toggleOverlay = () => {
+        setVisible(!visible);
+    };
     return (
         <View style={{ flex: 1, backgroundColor: "#f1f2f6", paddingTop: hp(10), paddingHorizontal: wp(2) }}>
             <StatusBar backgroundColor={"#f1f2f6"} />
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{ height: hp("50%"), backgroundColor: "white", borderRadius: 25, paddingHorizontal: wp(3), paddingVertical: hp(4) }}>
                     <Icon
                         raised
@@ -77,16 +83,16 @@ const DetailProduct = (props) => {
                         showsHorizontalScrollIndicator={false}
                     />
                 </View>
-                <View style={{ marginTop: 25, paddingHorizontal: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                    <View>
+                <View style={{ paddingHorizontal: 10, marginTop: 25 }} >
+                    <Text style={{ color: "gray" }}>{brand} | {kategori}</Text>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                         <Text h4 style={{ color: "#1B1464" }}>{nama}</Text>
-                        <Text style={{ color: "gray" }}>{brand} | {kategori}</Text>
+                        <Text h3 style={{ color: "#1B1464" }}>Rp. {harga}</Text>
                     </View>
-                    <Text h3 style={{ color: "#1B1464" }}>Rp. {harga}</Text>
                 </View>
                 <View style={{ paddingHorizontal: 10, marginTop: 20 }}>
                     <Text style={{ color: "#1B1464", fontWeight: "800" }}>
-                        Choose type : <Text style={{ color: "gray" }}>{stock.length} type</Text>
+                        Choose type : <Text style={{ color: "gray" }}>{stock.length} type</Text>, {activeType.qty?`${activeType.qty} stock`:""} 
                     </Text>
                     <View style={{ flexDirection: "row", marginTop: 16 }}>
                         {printType()}
@@ -102,15 +108,33 @@ const DetailProduct = (props) => {
             <Button
                 title="Add to Cart"
                 type="clear"
+                onPress={toggleOverlay}
                 containerStyle={{
                     marginBottom: 10,
                     borderRadius: 25,
-                    backgroundColor:"yellow"
+                    backgroundColor: "yellow"
                 }}
                 titleStyle={{
-                    color:"#3867d6"
+                    color: "#3867d6"
                 }}
             />
+            <Overlay isVisible={visible} onBackdropPress={toggleOverlay} >
+                <Input keyboardType="numeric" placeholder="Masukkan jumlah barang" containerStyle={{ width: wp(75) }}
+                    onChangeText={value => setQty(value)}
+                />
+                <Button icon={
+                    <Icon
+                        name="plus-square"
+                        type="feather"
+                        size={20}
+                        color="#FBD914"
+                        containerStyle={{ marginHorizontal: wp(2) }}
+                    />
+                }
+                    type="clear"
+                    containerStyle={{ width: wp(50), alignSelf: 'center' }} titleStyle={{ color: '#FBD914' }}
+                    title="Submit" />
+            </Overlay>
         </View>
     )
 }

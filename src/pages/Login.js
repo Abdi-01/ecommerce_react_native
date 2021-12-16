@@ -4,9 +4,15 @@ import { View, StatusBar, KeyboardAvoidingView, Alert } from 'react-native';
 import { Button, Icon, Image, Input, SocialIcon, Text } from 'react-native-elements';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen'
 import { API_URL } from '../helper';
+import { useDispatch } from 'react-redux';
+import { onLogin } from '../actions'
 import { StackActions } from '@react-navigation/native';
 
 const LoginPage = (props) => {
+    // useDispatch : digunakan untuk menjalankan fungsi dari actions, pengganti connect pada class component
+    const dispatch = useDispatch();
+
+
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -17,17 +23,15 @@ const LoginPage = (props) => {
 
 
     const onBtLogin = async () => {
-        try {
-            let res = await axios.get(`${API_URL}/users?username=${username}&password=${password}`)
 
-            if (res.data.length > 0) {
-                props.navigation.dispatch(StackActions.replace("TabNav"))
-            } else {
-                Alert.alert("Attention ⚠️", "This account is not exist")
-            }
-            console.log(res.data)
-        } catch (error) {
-            console.log(error)
+        let respon = await dispatch(onLogin(username, password));
+        console.log("test", respon.success)
+        // let res = await axios.get(`${API_URL}/users?username=${username}&password=${password}`)
+
+        if (respon.success > 0) {
+            props.navigation.dispatch(StackActions.replace("TabNav"))
+        } else {
+            Alert.alert("Attention ⚠️", "This account is not exist")
         }
     }
 
