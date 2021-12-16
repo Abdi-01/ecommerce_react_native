@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { View, StatusBar, KeyboardAvoidingView, Alert, Easing } from 'react-native';
 import { Button, Icon, Image, Input, SocialIcon, Text } from 'react-native-elements';
@@ -13,7 +13,7 @@ const LoginPage = (props) => {
     const dispatch = useDispatch();
 
     // useSelctor : pengganti mapToProps pada class component
-    const { iduser,email } = useSelector((state) => {
+    const { iduser, email } = useSelector((state) => {
         return {
             iduser: state.userReducer.id,
             email: state.userReducer.email
@@ -28,6 +28,12 @@ const LoginPage = (props) => {
         secret: true
     })
 
+    useEffect(() => {
+        if (iduser) {
+            props.navigation.dispatch(StackActions.replace("TabNav"));
+        }
+    })
+
 
     const onBtLogin = async () => {
 
@@ -36,7 +42,7 @@ const LoginPage = (props) => {
         // let res = await axios.get(`${API_URL}/users?username=${username}&password=${password}`)
 
         if (respon.success > 0) {
-            // props.navigation.dispatch(StackActions.replace("TabNav"))
+            props.navigation.dispatch(StackActions.replace("TabNav"))
         } else {
             Alert.alert("Attention ⚠️", "This account is not exist")
         }

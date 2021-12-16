@@ -20,7 +20,7 @@ const HomePage = (props) => {
     const getData = async () => {
         try {
             let res = await axios.get(`${API_URL}/products`)
-            console.log("Success get products ✅ : ", res.data)
+            // console.log("Success get products ✅ : ", res.data)
             setProducts(res.data)
         } catch (error) {
             console.log(error)
