@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, View, FlatList, ScrollView } from 'react-native';
+import { StatusBar, View, FlatList, ScrollView, Alert } from 'react-native';
 import { Text, Icon, Image, Button, Overlay, Input } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 const DetailProduct = (props) => {
@@ -8,6 +8,8 @@ const DetailProduct = (props) => {
     const [visible, setVisible] = React.useState(false);
     console.log(props.route.params)
     const [activeType, setActiveType] = React.useState({})
+    const [qty, setQty] = React.useState("1")
+
     const printType = () => {
         return stock.map((value, index) => {
             if (activeType.type == value.type) {
@@ -24,11 +26,11 @@ const DetailProduct = (props) => {
                         color: "white"
                     }}
                     onPress={() => setActiveType(value)}
-                    
-                    />
-                } else {
+
+                />
+            } else {
                 return <Button
-                title={value.type}
+                    title={value.type}
                     type="clear"
                     containerStyle={{
                         marginLeft: 5,
@@ -38,8 +40,8 @@ const DetailProduct = (props) => {
                         borderColor: "gray"
                     }}
                     onPress={() => setActiveType(value)}
-                    
-                    />
+
+                />
             }
         })
     }
@@ -47,6 +49,26 @@ const DetailProduct = (props) => {
     const toggleOverlay = () => {
         setVisible(!visible);
     };
+
+    const toggleAddToCart = () => {
+        if (activeType.type) {
+            // proses add to cart
+            toggleOverlay();
+        } else {
+            Alert.alert("Attention ⚠️", "Choose product type first");
+        }
+    };
+
+    const onBtAddToCart = () => {
+        /***
+         * 1. Mengambil data cart sebelumnya
+         * 2. Menambahkan data cart yang baru kedalam data cart sebelumnya
+         * 3. Mengirim data cart yang telah diperbarui ke json-server/api
+         * 4. alert success add to cart
+         * 
+        */
+    }
+
     return (
         <View style={{ flex: 1, backgroundColor: "#f1f2f6", paddingTop: hp(10), paddingHorizontal: wp(2) }}>
             <StatusBar backgroundColor={"#f1f2f6"} />
@@ -92,7 +114,7 @@ const DetailProduct = (props) => {
                 </View>
                 <View style={{ paddingHorizontal: 10, marginTop: 20 }}>
                     <Text style={{ color: "#1B1464", fontWeight: "800" }}>
-                        Choose type : <Text style={{ color: "gray" }}>{stock.length} type</Text>, {activeType.qty?`${activeType.qty} stock`:""} 
+                        Choose type : <Text style={{ color: "gray" }}>{stock.length} type</Text>, {activeType.qty ? `${activeType.qty} stock` : ""}
                     </Text>
                     <View style={{ flexDirection: "row", marginTop: 16 }}>
                         {printType()}
@@ -108,7 +130,7 @@ const DetailProduct = (props) => {
             <Button
                 title="Add to Cart"
                 type="clear"
-                onPress={toggleOverlay}
+                onPress={toggleAddToCart}
                 containerStyle={{
                     marginBottom: 10,
                     borderRadius: 25,
@@ -119,7 +141,7 @@ const DetailProduct = (props) => {
                 }}
             />
             <Overlay isVisible={visible} onBackdropPress={toggleOverlay} >
-                <Input keyboardType="numeric" placeholder="Masukkan jumlah barang" containerStyle={{ width: wp(75) }}
+                <Input keyboardType="numeric" placeholder="Masukkan jumlah barang" value={qty} containerStyle={{ width: wp(75) }}
                     onChangeText={value => setQty(value)}
                 />
                 <Button icon={
@@ -131,6 +153,7 @@ const DetailProduct = (props) => {
                         containerStyle={{ marginHorizontal: wp(2) }}
                     />
                 }
+                    onPress={onBtAddToCart}
                     type="clear"
                     containerStyle={{ width: wp(50), alignSelf: 'center' }} titleStyle={{ color: '#FBD914' }}
                     title="Submit" />

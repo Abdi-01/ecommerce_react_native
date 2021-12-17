@@ -2,7 +2,6 @@ import axios from "axios"
 import { API_URL } from "../helper"
 import AsyncStorageLib from "@react-native-async-storage/async-storage"
 
-
 export const onLogin = (username, password) => {
     return async (dispatch) => {
         try {
@@ -10,11 +9,11 @@ export const onLogin = (username, password) => {
             if (res.data.length > 0) {
                 // menyimpan data ke reducer
                 let data = JSON.stringify(res.data[0])
-                AsyncStorageLib.setItem("dataUser", data);
                 dispatch({
                     type: "LOGIN_SUCCESS",
                     payload: res.data[0]
                 })
+                await AsyncStorageLib.setItem("dataUser", data);
                 return { success: true }
             }
         } catch (error) {
@@ -38,7 +37,7 @@ export const onKeepLogin = () => {
                         payload: res.data[0]
                     })
 
-                    AsyncStorageLib.setItem("dataUser", JSON.stringify(res.data[0]));
+                    await AsyncStorageLib.setItem("dataUser", JSON.stringify(res.data[0]));
                     return { success: true }
                 }
             }
