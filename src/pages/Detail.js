@@ -2,8 +2,11 @@ import React from 'react';
 import { StatusBar, View, FlatList, ScrollView, Alert } from 'react-native';
 import { Text, Icon, Image, Button, Overlay, Input } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUserCart } from '../actions'
+
 const DetailProduct = (props) => {
+    const dispatch = useDispatch();
 
     const { nama, kategori, deskripsi, harga, brand, images, stock } = props.route.params.detail
     const [visible, setVisible] = React.useState(false);
@@ -12,9 +15,11 @@ const DetailProduct = (props) => {
     const [qty, setQty] = React.useState("1")
 
     // mengambil data cart sebelumnya dari global storage
-    const { cart } = useSelector((state) => {
+    const { cart, iduser } = useSelector((state) => {
+        console.log(state.userReducer)
         return {
-            cart: state.userReducer.cart
+            cart: state.userReducer.cart,
+            iduser: state.userReducer.id
         }
     })
 
@@ -67,7 +72,7 @@ const DetailProduct = (props) => {
         }
     };
 
-    const onBtAddToCart = () => {
+    const onBtAddToCart = async () => {
         /***
          * 1. Mengambil data cart sebelumnya
          * 2. Menambahkan data cart yang baru kedalam data cart sebelumnya
@@ -77,19 +82,35 @@ const DetailProduct = (props) => {
         */
         //    Tahap 1
         let temp = [...cart];
-        
+
         //    Tahap 2
         temp.push({
             image: images[0],
             nama,
             brand,
             harga,
-            type:activeType.type,
-            qty:parseInt(qty)
+            type: activeType.type,
+            qty: parseInt(qty)
         });
 
         // Tahap 3
-        
+        if (parseInt(qty) > 0 && iduser) {
+            let res = await dispatch(updateUserCart(temp, iduser))
+
+            if (res.success) {
+                Alert.alert("Success ✅", "Check your cart",
+                    [
+                        {
+                            text: "Ok",
+                            onPress: toggleOverlay
+                        }
+                    ])
+            } else {
+                Alert.alert("Attention ⚠️", "Add to cart failed");
+            }
+        } else {
+            Alert.alert("Attention ⚠️", `Minimum 1 qty ${iduser}`);
+        }
     }
 
     return (
