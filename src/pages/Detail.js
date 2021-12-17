@@ -2,6 +2,7 @@ import React from 'react';
 import { StatusBar, View, FlatList, ScrollView, Alert } from 'react-native';
 import { Text, Icon, Image, Button, Overlay, Input } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { useSelector } from 'react-redux';
 const DetailProduct = (props) => {
 
     const { nama, kategori, deskripsi, harga, brand, images, stock } = props.route.params.detail
@@ -9,6 +10,13 @@ const DetailProduct = (props) => {
     console.log(props.route.params)
     const [activeType, setActiveType] = React.useState({})
     const [qty, setQty] = React.useState("1")
+
+    // mengambil data cart sebelumnya dari global storage
+    const { cart } = useSelector((state) => {
+        return {
+            cart: state.userReducer.cart
+        }
+    })
 
     const printType = () => {
         return stock.map((value, index) => {
@@ -67,6 +75,21 @@ const DetailProduct = (props) => {
          * 4. alert success add to cart
          * 
         */
+        //    Tahap 1
+        let temp = [...cart];
+        
+        //    Tahap 2
+        temp.push({
+            image: images[0],
+            nama,
+            brand,
+            harga,
+            type:activeType.type,
+            qty:parseInt(qty)
+        });
+
+        // Tahap 3
+        
     }
 
     return (
