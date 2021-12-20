@@ -1,54 +1,60 @@
 import React, { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, Alert } from 'react-native';
 import { Image, Text, Button, Icon } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUserCart } from '../actions'
 
 const CartPage = (props) => {
 
-    const [cart, setCart] = useState([
-        {
-            nama: "IDALINNEA D",
-            type: "M",
-            qty: 3,
-            image: "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/107/0810720_PE771385_S4.jpg",
-            harga: 79000,
-        },
-        {
-            nama: "IDALINNEA D",
-            type: "M",
-            qty: 3,
-            image: "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/107/0810720_PE771385_S4.jpg",
-            harga: 79000,
-        },
-        {
-            nama: "IDALINNEA D",
-            type: "M",
-            qty: 3,
-            image: "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/107/0810720_PE771385_S4.jpg",
-            harga: 79000,
-        },
-        {
-            nama: "IDALINNEA D",
-            type: "M",
-            qty: 3,
-            image: "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/107/0810720_PE771385_S4.jpg",
-            harga: 79000,
-        },
-        {
-            nama: "IDALINNEA D",
-            type: "M",
-            qty: 3,
-            image: "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/107/0810720_PE771385_S4.jpg",
-            harga: 79000,
-        },
-        {
-            nama: "IDALINNEA D",
-            type: "M",
-            qty: 3,
-            image: "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/107/0810720_PE771385_S4.jpg",
-            harga: 79000,
+    const dispatch = useDispatch()
+    // mengambil data cart sebelumnya dari global storage
+    const { cart, iduser } = useSelector((state) => {
+        console.log(state.userReducer)
+        return {
+            cart: state.userReducer.cart,
+            iduser: state.userReducer.id
         }
-    ])
+    })
+
+    const onBtDec = (index) => {
+        let temp = [...cart];
+
+        if (temp[index].qty > 1) {
+            temp[index].qty -= 1
+            dispatch(updateUserCart(temp, iduser))
+        } else {
+            Alert.alert("Attention ⚠️", "Want to delete this product ?",
+                [
+                    {
+                        text: "Yes",
+                        onPress: () => onBtDelete(index)
+                    },
+                    {
+                        text: "No"
+                    }
+                ])
+        }
+    }
+
+    const onBtDelete = (index) => {
+        let temp = [...cart];
+        temp.splice(index, 1)
+        dispatch(updateUserCart(temp, iduser))
+    }
+
+    const onBtInc = (index) => {
+        let temp = [...cart];
+        temp[index].qty += 1
+        dispatch(updateUserCart(temp, iduser))
+    }
+
+    const totalPrice = () => {
+        let total = 0;
+
+        cart.forEach((value, index) => total += value.qty * value.harga)
+        return { total, tax: total * 10 / 100, ongkir: total * 20 / 100, totalPayment: total + (total * 10 / 100) + (total * 20 / 100) }
+    }
 
     const printCart = () => {
         return cart.map((value, index) => {
@@ -76,7 +82,9 @@ const CartPage = (props) => {
                             marginHorizontal: 4
                         }} icon={
                             <Icon type="feather" name="minus" size={10} />
-                        } />
+                        }
+                            onPress={() => onBtDec(index)}
+                        />
                         <Text h4 style={{ marginHorizontal: 10, color: "#1B1464" }}>{value.qty}</Text>
                         <Button type="clear" containerStyle={{
                             backgroundColor: "#ecf0f1",
@@ -86,13 +94,19 @@ const CartPage = (props) => {
                             marginHorizontal: 4
                         }} icon={
                             <Icon type="feather" name="plus" size={10} />
-                        } />
+                        }
+                            onPress={() => onBtInc(index)}
+                        />
                     </View>
                 </View>
-                <View>
-                    <Text h4 style={{ color: "#1B1464" }}>Rp. {value.harga}</Text>
-                    <Icon type="feather" name="trash" size={15} color="gray"
-                        style={{ textAlign: "right", marginTop: 10, width: "30%", marginLeft: "auto" }}
+                <View style={{ width: "33%" }}>
+                    <Text style={{ color: "#1B1464", fontSize: 16, fontWeight: "bold" }}>Rp. {value.harga}</Text>
+                    <Icon type="feather"
+                        name="trash"
+                        size={15}
+                        color="red"
+                        onPress={() => onBtDelete(index)}
+                        style={{ textAlign: "right", marginTop: 10, width: "30%", marginLeft: "auto", backgroundColor: "red" }}
                     />
                 </View>
             </View>
@@ -109,19 +123,19 @@ const CartPage = (props) => {
             </ScrollView>
             <View style={{ marginBottom: hp(8) }}>
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                    <Text style={{ marginHorizontal: 10, color: "#1B1464" }}>Shipping</Text>
-                    <Text style={{ marginHorizontal: 10, color: "#1B1464", fontWeight: "bold" }}>Rp. 180000</Text>
+                    <Text style={{ marginHorizontal: 10, color: "#1B1464" }}>Shipping (Total*20%)</Text>
+                    <Text style={{ marginHorizontal: 10, color: "#1B1464", fontWeight: "bold" }}>Rp. {totalPrice().ongkir}</Text>
                 </View>
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                    <Text style={{ marginHorizontal: 10, color: "#1B1464" }}>Tax</Text>
-                    <Text style={{ marginHorizontal: 10, color: "#1B1464", fontWeight: "bold" }}>Rp. 180000</Text>
+                    <Text style={{ marginHorizontal: 10, color: "#1B1464" }}>Tax (Total*10%)</Text>
+                    <Text style={{ marginHorizontal: 10, color: "#1B1464", fontWeight: "bold" }}>Rp. {totalPrice().tax}</Text>
                 </View>
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                     <Text style={{ marginHorizontal: 10, color: "#1B1464" }}>Total</Text>
-                    <Text style={{ fontSize: 20, marginHorizontal: 10, color: "#1B1464", fontWeight: "bold" }}>Rp. 180000</Text>
+                    <Text style={{ fontSize: 20, marginHorizontal: 10, color: "#1B1464", fontWeight: "bold" }}>Rp. {totalPrice().total}</Text>
                 </View>
                 <Button
-                    title="Checkout"
+                    title={`Checkout Rp. ${totalPrice().totalPayment}`}
                     type="clear"
                     containerStyle={{
                         marginVertical: 10,
