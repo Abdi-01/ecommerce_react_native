@@ -1,10 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'react-native';
 import { View } from 'react-native';
 import { Avatar, Badge, ButtonGroup, Card, Icon, ListItem, Text } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { useDispatch, useSelector } from 'react-redux';
+import { onLogout } from '../actions';
 
 const ProfilePage = (props) => {
+    const dispatch = useDispatch()
+    const { iduser, username, email, status } = useSelector((state) => {
+        console.log(state.userReducer)
+        return {
+            iduser: state.userReducer.id,
+            username: state.userReducer.username,
+            email: state.userReducer.email,
+            status: state.userReducer.status
+        }
+    })
+
+    useEffect(() => {
+        console.log("data dari reducer :", iduser)
+        if (!iduser) {
+            props.navigation.reset({
+                index: 0,
+                routes: [{ name: "Login" }]
+            })
+        }
+    })
 
     const [saldo, setSaldo] = useState([
         {
@@ -28,7 +50,7 @@ const ProfilePage = (props) => {
         {
             title: "Transactions",
             icon: "cart",
-            press: () => { }
+            press: () => props.navigation.navigate("History")
         },
         {
             title: "My Promo",
@@ -56,13 +78,15 @@ const ProfilePage = (props) => {
         {
             title: "Logout",
             icon: "logout",
-            press: () => { }
+            press: () => dispatch(onLogout())
         }
     ])
 
     const printMenuAccount = () => {
         return menuAccount.map((value, index) => {
-            return <ListItem key={index.toString()}>
+            return <ListItem key={index.toString()}
+                onPress={value.press}
+            >
                 <Icon name={value.icon} size={25} type='material-community' color="#1B1464" />
                 <ListItem.Content>
                     <ListItem.Title>{value.title}</ListItem.Title>
@@ -74,7 +98,10 @@ const ProfilePage = (props) => {
 
     const printMenuSettings = () => {
         return menuSettings.map((value, index) => {
-            return <ListItem key={index.toString()}>
+            return <ListItem
+                key={index.toString()}
+                onPress={value.press}
+            >
                 <Icon name={value.icon} size={25} type='material-community' color="#1B1464" />
                 <ListItem.Content>
                     <ListItem.Title>{value.title}</ListItem.Title>
@@ -112,11 +139,17 @@ const ProfilePage = (props) => {
                         source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsdD1rK4ZtCJVizS00LaWifgJnY-wzSVBoHw&usqp=CAU" }}
                     />
                     <View style={{ marginLeft: wp(5) }}>
-                        <Text style={{ color: "yellow" }} h4>username <Badge value="Active" status="success" /></Text>
-                        <Text style={{ color: "white" }} >email@mail.com</Text>
+                        <Text style={{ color: "yellow" }} h4>{username} <Badge value={status} status="success" /></Text>
+                        <Text style={{ color: "white" }} >{email}</Text>
                     </View>
+                    <Icon
+                        size={28}
+                        type='material-community'
+                        name="account-edit"
+                        color="white"
+                    />
                 </View>
-                <View style={{ flexDirection: "row", marginTop: hp(5) }}>
+                <View style={{ flexDirection: "row", marginVertical: hp(3) }}>
                     {printSaldo()}
                 </View>
             </View>
