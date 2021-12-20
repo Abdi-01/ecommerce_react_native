@@ -24,7 +24,7 @@ const ProfilePage = (props) => {
         }
     ])
 
-    const [listMenu, setListMenu] = useState([
+    const [menuAccount, setMenuAccount] = useState([
         {
             title: "Transactions",
             icon: "cart",
@@ -42,8 +42,38 @@ const ProfilePage = (props) => {
         }
     ])
 
-    const printListMenu = () => {
-        return listMenu.map((value, index) => {
+    const [menuSettings, setMenuSettings] = useState([
+        {
+            title: "Settings",
+            icon: "cog-outline",
+            press: () => { }
+        },
+        {
+            title: "Privacy and Police",
+            icon: "shield-account",
+            press: () => { }
+        },
+        {
+            title: "Logout",
+            icon: "logout",
+            press: () => { }
+        }
+    ])
+
+    const printMenuAccount = () => {
+        return menuAccount.map((value, index) => {
+            return <ListItem key={index.toString()}>
+                <Icon name={value.icon} size={25} type='material-community' color="#1B1464" />
+                <ListItem.Content>
+                    <ListItem.Title>{value.title}</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron />
+            </ListItem>
+        })
+    }
+
+    const printMenuSettings = () => {
+        return menuSettings.map((value, index) => {
             return <ListItem key={index.toString()}>
                 <Icon name={value.icon} size={25} type='material-community' color="#1B1464" />
                 <ListItem.Content>
@@ -100,11 +130,11 @@ const ProfilePage = (props) => {
             }}>
                 <View>
                     <Text h4 style={{ color: "#1B1464" }}>Account</Text>
-                    {printListMenu()}
+                    {printMenuAccount()}
                 </View>
                 <View>
-                    <Text h4 style={{ color: "#1B1464" }}>Setting</Text>
-                    {printListMenu()}
+                    <Text h4 style={{ color: "#1B1464" }}>Settings</Text>
+                    {printMenuSettings()}
                 </View>
             </View>
         </View>
