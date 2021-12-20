@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'react-native';
 import { View } from 'react-native';
-import { Avatar, Badge, ButtonGroup, Card, Icon, Text } from 'react-native-elements';
+import { Avatar, Badge, ButtonGroup, Card, Icon, ListItem, Text } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const ProfilePage = (props) => {
@@ -24,9 +24,39 @@ const ProfilePage = (props) => {
         }
     ])
 
+    const [listMenu, setListMenu] = useState([
+        {
+            title: "Transactions",
+            icon: "cart",
+            press: () => { }
+        },
+        {
+            title: "My Promo",
+            icon: "card-bulleted-outline",
+            press: () => { }
+        },
+        {
+            title: "Address List",
+            icon: "map",
+            press: () => { }
+        }
+    ])
+
+    const printListMenu = () => {
+        return listMenu.map((value, index) => {
+            return <ListItem key={index.toString()}>
+                <Icon name={value.icon} size={25} type='material-community' color="#1B1464" />
+                <ListItem.Content>
+                    <ListItem.Title>{value.title}</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron />
+            </ListItem>
+        })
+    }
+
     const printSaldo = () => {
         return saldo.map((value, index) => {
-            return <View style={{ flex: 1, borderWidth:  0.7, borderColor:"gray", padding:10, borderRadius:10 }}>
+            return <View style={{ flex: 1, borderWidth: 0.7, borderColor: "gray", padding: 10, borderRadius: 10, backgroundColor: "white" }}>
                 <Icon
                     size={32}
                     type="feather"
@@ -41,22 +71,41 @@ const ProfilePage = (props) => {
     return (
         <View style={{ flex: 1, backgroundColor: "white", paddingTop: hp(7) }}>
             <View style={{
-                backgroundColor: "#1B1464", flexDirection: "row",
+                backgroundColor: "#1B1464",
                 paddingHorizontal: wp(3),
                 paddingVertical: hp(4)
             }}>
-                <Avatar
-                    rounded
-                    size="large"
-                    source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsdD1rK4ZtCJVizS00LaWifgJnY-wzSVBoHw&usqp=CAU" }}
-                />
-                <View style={{ marginLeft: wp(5) }}>
-                    <Text style={{ color: "yellow" }} h4>username <Badge value="Active" status="success" /></Text>
-                    <Text style={{ color: "white" }} >email@mail.com</Text>
+                <View style={{ flexDirection: "row" }}>
+                    <Avatar
+                        rounded
+                        size="large"
+                        source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsdD1rK4ZtCJVizS00LaWifgJnY-wzSVBoHw&usqp=CAU" }}
+                    />
+                    <View style={{ marginLeft: wp(5) }}>
+                        <Text style={{ color: "yellow" }} h4>username <Badge value="Active" status="success" /></Text>
+                        <Text style={{ color: "white" }} >email@mail.com</Text>
+                    </View>
+                </View>
+                <View style={{ flexDirection: "row", marginTop: hp(5) }}>
+                    {printSaldo()}
                 </View>
             </View>
-            <View style={{ paddingHorizontal: wp(3), flexDirection: "row", marginTop:hp(3) }}>
-                {printSaldo()}
+            <View style={{
+                paddingHorizontal: wp(3),
+                backgroundColor: "white",
+                paddingTop: hp(3),
+                marginTop: hp(-3),
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20
+            }}>
+                <View>
+                    <Text h4 style={{ color: "#1B1464" }}>Account</Text>
+                    {printListMenu()}
+                </View>
+                <View>
+                    <Text h4 style={{ color: "#1B1464" }}>Setting</Text>
+                    {printListMenu()}
+                </View>
             </View>
         </View>
     )
