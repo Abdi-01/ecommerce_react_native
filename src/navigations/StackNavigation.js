@@ -7,6 +7,7 @@ import DetailProduct from '../pages/Detail';
 import { useDispatch } from 'react-redux';
 import { onKeepLogin } from '../actions';
 import HistoryPage from '../pages/History';
+import DetailTransaction from '../pages/DetailTransaction';
 
 const Stack = createNativeStackNavigator()
 const StackNavigation = (props) => {
@@ -24,6 +25,8 @@ const StackNavigation = (props) => {
             <Stack.Screen name="Register" component={RegisterPage} options={{ headerShown: false }} />
             <Stack.Screen name="Detail" component={DetailProduct} options={{ headerShown: false }} />
             <Stack.Screen name="History" component={HistoryPage} />
+            <Stack.Screen name="Detail Transaction" component={DetailTransaction} />
+
         </Stack.Navigator>
     )
 }
