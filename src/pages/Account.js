@@ -1,40 +1,48 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { Avatar, Icon, ListItem, Overlay, Text } from 'react-native-elements';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ImageCropPicker from 'react-native-image-crop-picker';
+import { updateUserPhoto } from "../actions"
 
 const Account = (props) => {
 
-    const [gambar, setGambar] = useState("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsdD1rK4ZtCJVizS00LaWifgJnY-wzSVBoHw&usqp=CAU")
+    const dispatch = useDispatch();
+    // const [gambar, setGambar] = useState("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsdD1rK4ZtCJVizS00LaWifgJnY-wzSVBoHw&usqp=CAU")
 
     const [visible, setVisible] = useState(false);
 
-    const { iduser, username, email, password, role, status } = useSelector((state) => {
+    const { iduser, username, email, password, role, status, photo } = useSelector((state) => {
         return {
             iduser: state.userReducer.id,
             username: state.userReducer.username,
             email: state.userReducer.email,
             password: state.userReducer.password,
             role: state.userReducer.role,
-            status: state.userReducer.status
+            status: state.userReducer.status,
+            photo: state.userReducer.photo
         }
     })
 
-    const onBtImage = () => {
-        ImageCropPicker.openPicker({
-            width: wp(40),
-            height: wp(40),
-            cropping: true,
-            mediaType: 'photo'
-        }).then((image) => {
-            console.log("Imager from storage", image)
-            setGambar(image.path)
-            setVisible(!visible)
-        }).catch((err) => {
-            console.log(err)
-        })
+    const onBtImage = async () => {
+        try {
+            let image = await ImageCropPicker.openPicker({
+                width: wp(40),
+                height: wp(40),
+                cropping: true,
+                mediaType: 'photo'
+            })
+
+            if (image.path) {
+                let res = await dispatch(updateUserPhoto(image.path, iduser))
+                if (res.success) {
+                    setVisible(!visible)
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
@@ -59,7 +67,7 @@ const Account = (props) => {
                 containerStyle={{ alignSelf: "center", marginTop: 16 }}
                 rounded
                 size="xlarge"
-                source={{ uri: gambar }}
+                source={{ uri: photo }}
             >
                 <Avatar.Accessory
                     name="edit"

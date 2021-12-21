@@ -89,6 +89,26 @@ export const updateUserCart = (data, iduser) => {
     }
 }
 
+export const updateUserPhoto = (image, iduser) => {
+    return async (dispatch) => {
+        try {
+            let res = await axios.patch(`${API_URL}/users/${iduser}`, {
+                photo: image
+            })
+
+            dispatch({
+                type: "UPDATE_PHOTO",
+                payload: res.data.photo
+            })
+
+            return { success: true };
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+
 export const onLogout = () => {
     return async (dispatch) => {
         await AsyncStorageLib.removeItem('dataUser')

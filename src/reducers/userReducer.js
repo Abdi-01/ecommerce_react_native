@@ -16,6 +16,8 @@ export const userReducer = (state = INITIAL_STATE, action) => {
             return INITIAL_STATE
         case "UPDATE_CART":
             return { ...state, cart: action.payload }
+        case "UPDATE_PHOTO":
+            return { ...state, photo: action.payload }
         default:
             return state
     }
