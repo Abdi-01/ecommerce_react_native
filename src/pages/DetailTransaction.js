@@ -43,20 +43,20 @@ const DetailTransaction = (props) => {
                     <Card.Title style={{ textAlign: "left" }}>Payment Detail</Card.Title>
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                         <Text>Total Price</Text>
-                        <Text>Rp. 0000</Text>
+                        <Text>Rp. {(totalPayment - ongkir)}</Text>
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                         <Text>Tax</Text>
-                        <Text>Rp. 0000</Text>
+                        <Text>Rp. {(totalPayment - ongkir) * 10 / 100}</Text>
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                         <Text>Shipping</Text>
-                        <Text>Rp. 0000</Text>
+                        <Text>Rp. {ongkir}</Text>
                     </View>
                     <Card.Divider />
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                         <Text style={{ fontWeight: "bold" }}>Total Payment</Text>
-                        <Text style={{ fontWeight: "bold" }}>Rp. 0000</Text>
+                        <Text style={{ fontWeight: "bold" }}>Rp. {totalPayment + ((totalPayment - ongkir) * 10 / 100)}</Text>
                     </View>
                 </Card>
             </ScrollView>

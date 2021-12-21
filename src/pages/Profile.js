@@ -147,6 +147,7 @@ const ProfilePage = (props) => {
                         type='material-community'
                         name="account-edit"
                         color="white"
+                        onPress={() => props.navigation.navigate("Account Detail")}
                     />
                 </View>
                 <View style={{ flexDirection: "row", marginVertical: hp(3) }}>

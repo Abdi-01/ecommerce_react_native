@@ -56,6 +56,7 @@ export const onRegis = (username, email, password) => {
                 password,
                 role: "user",
                 status: "Active",
+                photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsdD1rK4ZtCJVizS00LaWifgJnY-wzSVBoHw&usqp=CAU",
                 cart: []
             });
             // if (res.data.length > 0) {

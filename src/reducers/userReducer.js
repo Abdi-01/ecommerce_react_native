@@ -4,6 +4,7 @@ const INITIAL_STATE = {
     email: "",
     role: "",
     status: "",
+    photo: "",
     cart: []
 }
 
