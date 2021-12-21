@@ -64,15 +64,16 @@ const HistoryPage = (props) => {
                 </View>
                 <View style={{ flexDirection: "row-reverse" }}>
                     <Button
-                        title="Lihat Detail Produk"
+                        title="Lihat Detail"
                         type='outline'
                         buttonStyle={{ padding: 3 }}
                         titleStyle={{ fontSize: 10 }}
                         containerStyle={{ margin: 5 }}
-                        onPress={()=>props.navigation.navigate("Detail Transaction")}
+                        onPress={() => props.navigation.navigate("Detail Transaction", { detail: value })}
                     />
                     <Button
                         title="Batalkan Pesanan"
+                        disabled={badgeColor == "warning" ? false : true}
                         buttonStyle={{ padding: 3, backgroundColor: "red" }}
                         titleStyle={{ fontSize: 10 }}
                         containerStyle={{ margin: 5 }}
