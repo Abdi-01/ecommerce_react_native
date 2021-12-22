@@ -8,13 +8,14 @@ import { onLogout } from '../actions';
 
 const ProfilePage = (props) => {
     const dispatch = useDispatch()
-    const { iduser, username, email, status } = useSelector((state) => {
+    const { iduser, username, email, status, photo } = useSelector((state) => {
         console.log(state.userReducer)
         return {
             iduser: state.userReducer.id,
             username: state.userReducer.username,
             email: state.userReducer.email,
-            status: state.userReducer.status
+            status: state.userReducer.status,
+            photo: state.userReducer.photo
         }
     })
 
@@ -136,7 +137,7 @@ const ProfilePage = (props) => {
                     <Avatar
                         rounded
                         size="large"
-                        source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsdD1rK4ZtCJVizS00LaWifgJnY-wzSVBoHw&usqp=CAU" }}
+                        source={{ uri: photo }}
                     />
                     <View style={{ marginLeft: wp(5) }}>
                         <Text style={{ color: "yellow" }} h4>{username} <Badge value={status} status="success" /></Text>
