@@ -36,22 +36,12 @@ const Account = (props) => {
 
     const onBtImage = async (type) => {
         try {
-            let image;
-            if (type == "gallery") {
-                image = await ImageCropPicker.openPicker({
-                    width: wp(40),
-                    height: wp(40),
-                    cropping: true,
-                    mediaType: 'photo'
-                })
-            } else if (type == "camera") {
-                image = await ImageCropPicker.openCamera({
-                    width: wp(40),
-                    height: wp(40),
-                    cropping: true,
-                    mediaType: 'photo'
-                })
-            }
+            let image = await ImageCropPicker[type]({
+                width: wp(40),
+                height: wp(40),
+                cropping: true,
+                mediaType: 'photo'
+            })
 
             if (image.path) {
                 let res = await dispatch(updateUserPhoto(image.path, iduser))
@@ -91,14 +81,14 @@ const Account = (props) => {
     return (
         <View style={{ flex: 1, backgroundColor: "white" }}>
             <Overlay isVisible={visible} onBackdropPress={() => setVisible(!visible)}>
-                <ListItem containerStyle={{ width: wp(65) }} onPress={() => onBtImage("gallery")}>
+                <ListItem containerStyle={{ width: wp(65) }} onPress={() => onBtImage("openPicker")}>
                     <Icon name="folder" type="feather" />
                     <ListItem.Content>
                         <ListItem.Title>Select from Gallery</ListItem.Title>
                     </ListItem.Content>
                     <ListItem.Chevron />
                 </ListItem>
-                <ListItem containerStyle={{ width: wp(65) }} onPress={() => onBtImage("camera")}>
+                <ListItem containerStyle={{ width: wp(65) }} onPress={() => onBtImage("openCamera")}>
                     <Icon name="camera" type="feather" />
                     <ListItem.Content>
                         <ListItem.Title>Open Camera</ListItem.Title>
