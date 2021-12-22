@@ -20,6 +20,7 @@ const LoginPage = (props) => {
         }
     })
 
+    const [splashLogin, setSplashLogin] = useState(false);
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -34,6 +35,7 @@ const LoginPage = (props) => {
         }
     })
 
+    setTimeout(()=>setSplashLogin(true), 6000)
 
     const onBtLogin = async () => {
 
@@ -62,61 +64,74 @@ const LoginPage = (props) => {
         }
     }
 
-    return (
-        <View style={{ flex: 1, backgroundColor: "white", paddingHorizontal: 20 }}>
-            <StatusBar backgroundColor={"white"} barStyle='dark-content' />
-            <KeyboardAvoidingView behavior="position">
-                <Image source={require('../assets/login_asset.png')}
-                    style={{ height: hp(35) }}
-                />
-                <Text h2 style={{ color: "#1B1464" }}>Login</Text>
-                <View style={{ marginVertical: hp(3) }}>
-                    <Input placeholder="Input Username"
-                        onChangeText={(val) => setUsername(val)}
-                        leftIcon={
-                            <Icon name="user" type="feather" color="#bdc3c7" />
-                        }
+    if (splashLogin) {
+        return (
+            <View style={{ flex: 1, backgroundColor: "white", paddingHorizontal: 20 }}>
+                <StatusBar backgroundColor={"white"} barStyle='dark-content' />
+                <KeyboardAvoidingView behavior="position">
+                    <Image source={require('../assets/login_asset.png')}
+                        style={{ height: hp(35) }}
                     />
-                    <Input placeholder="Input Password"
-                        onChangeText={(val) => setPassword(val)}
-                        secureTextEntry={visible.secret}
-                        leftIcon={
-                            <Icon name="lock" type="feather" color="#bdc3c7" />
-                        }
-                        rightIcon={
-                            <Icon name={visible.icon} type="feather" color="#bdc3c7" onPress={onBtVisible} />
-                        }
+                    <Text h2 style={{ color: "#1B1464" }}>Login</Text>
+                    <View style={{ marginVertical: hp(3) }}>
+                        <Input placeholder="Input Username"
+                            onChangeText={(val) => setUsername(val)}
+                            leftIcon={
+                                <Icon name="user" type="feather" color="#bdc3c7" />
+                            }
+                        />
+                        <Input placeholder="Input Password"
+                            onChangeText={(val) => setPassword(val)}
+                            secureTextEntry={visible.secret}
+                            leftIcon={
+                                <Icon name="lock" type="feather" color="#bdc3c7" />
+                            }
+                            rightIcon={
+                                <Icon name={visible.icon} type="feather" color="#bdc3c7" onPress={onBtVisible} />
+                            }
+                        />
+                        <Text style={{ fontWeight: "bold", color: "#00a8ff", textAlign: "right" }}>Forgot Password ?</Text>
+                    </View>
+                    <Button
+                        title="Login"
+                        onPress={onBtLogin}
+                        containerStyle={{ borderRadius: 10 }}
+                        buttonStyle={{ backgroundColor: "#00a8ff" }}
                     />
-                    <Text style={{ fontWeight: "bold", color: "#00a8ff", textAlign: "right" }}>Forgot Password ?</Text>
-                </View>
-                <Button
-                    title="Login"
-                    onPress={onBtLogin}
-                    containerStyle={{ borderRadius: 10 }}
-                    buttonStyle={{ backgroundColor: "#00a8ff" }}
-                />
-                <Text style={{ textAlign: "center", color: "gray", marginVertical: hp(3) }}>OR</Text>
-                <Button
-                    title="Login with Google"
-                    containerStyle={{ borderRadius: 10 }}
-                    titleStyle={{ color: "black" }}
-                    icon={<SocialIcon type="google" iconSize={10} raised={false} />}
-                    buttonStyle={{ backgroundColor: "#ecf0f1" }}
-                />
-                <View style={{ marginTop: hp(2.5) }}>
-                    <Text style={{ textAlign: "center" }}>
-                        No have account ?
-                        <Text
-                            style={{ fontWeight: "bold", color: "#00a8ff" }}
-                            onPress={() => props.navigation.navigate("Register")}
-                        >
-                            Register
+                    <Text style={{ textAlign: "center", color: "gray", marginVertical: hp(3) }}>OR</Text>
+                    <Button
+                        title="Login with Google"
+                        containerStyle={{ borderRadius: 10 }}
+                        titleStyle={{ color: "black" }}
+                        icon={<SocialIcon type="google" iconSize={10} raised={false} />}
+                        buttonStyle={{ backgroundColor: "#ecf0f1" }}
+                    />
+                    <View style={{ marginTop: hp(2.5) }}>
+                        <Text style={{ textAlign: "center" }}>
+                            No have account ?
+                            <Text
+                                style={{ fontWeight: "bold", color: "#00a8ff" }}
+                                onPress={() => props.navigation.navigate("Register")}
+                            >
+                                Register
+                            </Text>
                         </Text>
-                    </Text>
-                </View>
-            </KeyboardAvoidingView>
+                    </View>
+                </KeyboardAvoidingView>
+            </View>
+        )
+    }
+
+    return (
+        <View style={{ flex: 1, backgroundColor: "white", justifyContent: "center", alignItems: "center" }}>
+            <StatusBar backgroundColor="white" barStyle='dark-content' />
+            <Image
+                style={{ width: wp(50), height: hp(20) }}
+                source={require('../assets/e-commerce.png')}
+            />
         </View>
     )
+
 };
 
 export default LoginPage;

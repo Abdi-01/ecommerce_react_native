@@ -12,7 +12,7 @@ const Account = (props) => {
     // const [gambar, setGambar] = useState("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsdD1rK4ZtCJVizS00LaWifgJnY-wzSVBoHw&usqp=CAU")
 
     const [visible, setVisible] = useState(false);
-    const [edit, setEdit] = useState(true);
+    const [edit, setEdit] = useState(true); // mengaktifkan atau menonaktifkan disabled pada elemen input
     const [btnEdit, setBtnEdit] = useState("Edit");
     const [btnEditType, setBtnEditType] = useState("outline");
 
@@ -55,10 +55,6 @@ const Account = (props) => {
     }
 
     const onBtEdit = () => {
-        setEdit(!edit)
-        setData({
-            ...data, username, email, password
-        })
         if (!edit) {
             setBtnEdit("Edit")
             setBtnEditType("outline")
@@ -66,6 +62,10 @@ const Account = (props) => {
             setBtnEdit("Cancel")
             setBtnEditType("solid")
         }
+        setEdit(!edit)
+        setData({
+            ...data, username, email, password
+        })
     }
 
     const onBtSave = async () => {

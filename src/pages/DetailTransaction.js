@@ -4,7 +4,7 @@ import { Card, Image, Text } from 'react-native-elements';
 
 const DetailTransaction = (props) => {
 
-    let { iduser, username, invoice, date, note, totalPayment, ongkir, detail, status, id } = props.route.params.detail
+    let { iduser, username, invoice, date, note, totalPayment, ongkir, tax, totalPrice, detail, status, id } = props.route.params.detail
 
     const printProduct = () => {
         return detail.map((value, index) => {
@@ -43,11 +43,11 @@ const DetailTransaction = (props) => {
                     <Card.Title style={{ textAlign: "left" }}>Payment Detail</Card.Title>
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                         <Text>Total Price</Text>
-                        <Text>Rp. {(totalPayment - ongkir)}</Text>
+                        <Text>Rp. {totalPrice}</Text>
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                         <Text>Tax</Text>
-                        <Text>Rp. {(totalPayment - ongkir) * 10 / 100}</Text>
+                        <Text>Rp. {tax}</Text>
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                         <Text>Shipping</Text>
@@ -56,7 +56,7 @@ const DetailTransaction = (props) => {
                     <Card.Divider />
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                         <Text style={{ fontWeight: "bold" }}>Total Payment</Text>
-                        <Text style={{ fontWeight: "bold" }}>Rp. {totalPayment + ((totalPayment - ongkir) * 10 / 100)}</Text>
+                        <Text style={{ fontWeight: "bold" }}>Rp. {totalPayment}</Text>
                     </View>
                 </Card>
             </ScrollView>

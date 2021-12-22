@@ -1,18 +1,21 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { ScrollView, View, Alert } from 'react-native';
 import { Image, Text, Button, Icon } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserCart } from '../actions'
+import { API_URL } from '../helper';
 
 const CartPage = (props) => {
 
     const dispatch = useDispatch()
     // mengambil data cart sebelumnya dari global storage
-    const { cart, iduser } = useSelector((state) => {
+    const { cart, iduser, username } = useSelector((state) => {
         console.log(state.userReducer)
         return {
             cart: state.userReducer.cart,
+            username: state.userReducer.username,
             iduser: state.userReducer.id
         }
     })
@@ -113,6 +116,31 @@ const CartPage = (props) => {
         })
     }
 
+    const onBtCheckout = async () => {
+        try {
+            let date = new Date();
+            let res = await axios.post(`${API_URL}/userTransactions`, {
+                iduser,
+                username,
+                invoice: `#INV/${date.getTime()}`,
+                date: date.toLocaleDateString(),
+                note: "",
+                totalPrice: totalPrice().total,
+                ongkir: totalPrice().ongkir,
+                tax: totalPrice().tax,
+                totalPayment: totalPrice().totalPayment,
+                detail: [...cart],
+                status: "Menunggu Konfirmasi"
+            })
+
+            if (res.data) {
+                dispatch(updateUserCart([], iduser));
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <View style={{ flex: 1, backgroundColor: "white", paddingTop: hp(10), paddingHorizontal: wp(5) }}>
             <Text style={{ fontSize: 18, color: "#1B1464", textAlign: "center" }}>Cart</Text>
@@ -145,6 +173,8 @@ const CartPage = (props) => {
                     titleStyle={{
                         color: "#3867d6"
                     }}
+                    disabled={cart.length == 0}
+                    onPress={onBtCheckout}
                 />
             </View>
         </View>

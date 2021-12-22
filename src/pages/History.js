@@ -59,7 +59,7 @@ const HistoryPage = (props) => {
                     </View>
                     <View style={{ marginLeft: "auto", marginRight: 3 }}>
                         <Text style={{ color: "gray" }}>Total</Text>
-                        <Text style={{ fontWeight: "bold", fontSize: 16 }}>Rp. {value.totalPayment + ((value.totalPayment - value.ongkir) * 10 / 100)}</Text>
+                        <Text style={{ fontWeight: "bold", fontSize: 16 }}>Rp. {value.totalPayment}</Text>
                     </View>
                 </View>
                 <View style={{ flexDirection: "row-reverse" }}>
